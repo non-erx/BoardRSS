@@ -27,7 +27,7 @@ const cardVariants = {
     filter: 'blur(0px)',
     transition: {
       duration: 0.35,
-      ease: 'easeOut',
+      ease: 'easeOut' as const,
     },
   },
   exit: {
