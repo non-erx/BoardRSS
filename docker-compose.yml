@@ -1,0 +1,12 @@
+services:
+  boardrss:
+    build: .
+    container_name: boardrss
+    ports:
+      - "8000:8000"
+    volumes:
+      - boardrss-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  boardrss-data:

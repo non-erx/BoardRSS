@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+node_modules/
+data/
+frontend/dist/
+*.pyc
+.git/
+.gitignore
+.dockerignore
+README.md
