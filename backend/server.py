@@ -194,15 +194,17 @@ async def fetch_source(source: dict):
         conn = get_db()
         cutoff = (datetime.now(timezone.utc) - timedelta(days=10, hours=12)).isoformat()
         existing_titles = set()
-        for row in conn.execute("SELECT title FROM items WHERE source_id = ?", (source_id,)).fetchall():
-            existing_titles.add(re.sub(r"[^a-z0-9]", "", row["title"].lower()))
+        existing_map = {}
+        for row in conn.execute("SELECT id, title, description FROM items WHERE source_id = ?", (source_id,)).fetchall():
+            tn = re.sub(r"[^a-z0-9]", "", row["title"].lower())
+            existing_titles.add(tn)
+            existing_map[tn] = (row["id"], row["description"] or "")
         for item in items_parsed:
             pub = (item.published_at or datetime.now(timezone.utc)).isoformat()
             if pub < cutoff:
                 continue
             title_norm = re.sub(r"[^a-z0-9]", "", (item.title or "").lower())
-            if any(title_norm in et or et in title_norm for et in existing_titles if len(et) > 20):
-                continue
+            dup_key = next((et for et in existing_titles if len(et) > 20 and (title_norm in et or et in title_norm)), None)
             desc = item.description or ""
             desc = re.sub(r"\s*The post\s+.+\s+appeared first on\s+.+\.\s*$", "", desc).strip()
             title_norm = re.sub(r"[^a-z0-9]", "", (item.title or "").lower())
@@ -218,6 +220,11 @@ async def fetch_source(source: dict):
                     pass
             if len(desc) > 300:
                 desc = desc[:297] + "..."
+            if dup_key:
+                old_id, old_desc = existing_map[dup_key]
+                if desc and not old_desc:
+                    conn.execute("UPDATE items SET description = ? WHERE id = ?", (desc, old_id))
+                continue
             hashtags = set()
             for text in (item.title or "", desc):
                 hashtags.update(re.findall(r"#(\w+)", text))
