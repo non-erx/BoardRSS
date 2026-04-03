@@ -1,7 +1,7 @@
 # BoardRSS
 Self-hosted RSS reader that feels like a notification feed. Add sites and get a clean, scrollable stream - no accounts or third-party services.
 Built with FastAPI + React. Runs anywhere Docker works.
----
+
 
 ## Quick Start
 **Docker (recommended)**
@@ -22,7 +22,6 @@ Or run both:
 ```bash
 python start.py
 ```
----
 
 ## Features
 
@@ -34,17 +33,14 @@ python start.py
 * **Import/export**
 * **Auto-cleanup**
 * **Adjustable polling**
----
 
 ## Admin
 `/admin` panel lets you manage sources, trigger fetches, customize UI, and control access.
----
 
 ## Stack
 * Backend: FastAPI, SQLite
 * Frontend: React, TypeScript
 * Deploy: Docker
----
 
 ## License
 MIT License
