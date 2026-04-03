@@ -170,21 +170,12 @@ a {
   color: var(--text-secondary);
   line-height: 1.55;
   margin-bottom: 12px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  position: relative;
 }
-.notif-desc::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 3em;
-  height: 1.55em;
-  background: linear-gradient(to right, transparent, var(--card-bg, #fff));
-  pointer-events: none;
+.desc-fade {
+  background: linear-gradient(to right, var(--text-secondary), transparent 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .notif-tags {
@@ -219,15 +210,21 @@ a {
   background: #262626;
 }
 
+.tag-filter-wrap {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+}
+
 .tag-filter-bar {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   gap: 6px;
   overflow-x: auto;
+  scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 0 0 2px;
+  padding: 2px 16px;
 }
 
 .tag-filter-bar::-webkit-scrollbar {

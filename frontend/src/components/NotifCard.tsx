@@ -45,6 +45,17 @@ export default function NotifCard({ item, activeTags, onTagClick }: { item: Feed
   const descNorm = rawDesc.toLowerCase().replace(/[^a-z0-9]/g, '')
   const isDup = !descNorm || descNorm === titleNorm || (descNorm.length < titleNorm.length * 2 && (titleNorm.includes(descNorm) || descNorm.includes(titleNorm)))
   const desc = isDup ? '' : rawDesc
+  const MAX_DESC = 200
+  const isLong = desc.length > MAX_DESC
+  let descBody = desc
+  let descFade = ''
+  if (isLong) {
+    const trimmed = desc.slice(0, MAX_DESC).replace(/\s+\S*$/, '').replace(/[^a-zA-Z0-9"'\u2019\u201D)\]]+$/, '')
+    const splitAt = Math.max(0, trimmed.length - 30)
+    const fadeStart = trimmed.lastIndexOf(' ', splitAt)
+    descBody = trimmed.slice(0, fadeStart > 0 ? fadeStart : splitAt)
+    descFade = trimmed.slice(fadeStart > 0 ? fadeStart : splitAt) + '...'
+  }
 
   const inner = (
     <>
@@ -53,7 +64,7 @@ export default function NotifCard({ item, activeTags, onTagClick }: { item: Feed
       )}
       <div className="notif-title">{item.title}</div>
       {desc && (
-        <div className="notif-desc">{desc}</div>
+        <div className="notif-desc">{descBody}{descFade && <span className="desc-fade">{descFade}</span>}</div>
       )}
       {sourceTags.length > 0 && (
         <div className="notif-tags">

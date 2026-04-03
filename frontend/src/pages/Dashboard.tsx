@@ -145,19 +145,32 @@ export default function Dashboard({ customization }: { customization: Customizat
         ) : (
           <>
             {allTags.length > 0 && (
-              <div className="tag-filter-bar">
-                {allTags.map((tag) => (
-                  <button
-                    key={tag}
-                    className={`tag-filter-pill${filterTags.includes(tag) ? ' tag-filter-active' : ''}`}
-                    onClick={() => onTagClick(tag)}
-                  >
-                    #{tag}
-                  </button>
-                ))}
-                {filterTags.length > 0 && (
-                  <button className="filter-clear" onClick={() => { setFilterTags([]); setVisibleCount(PAGE_SIZE) }}>×</button>
-                )}
+              <div className="tag-filter-wrap">
+                <div
+                  className="tag-filter-bar"
+                  ref={(el) => {
+                    if (!el) return
+                    el.onwheel = (ev) => {
+                      if (ev.deltaY !== 0) {
+                        el.scrollBy({ left: ev.deltaY })
+                        ev.preventDefault()
+                      }
+                    }
+                  }}
+                >
+                  {allTags.map((tag) => (
+                    <button
+                      key={tag}
+                      className={`tag-filter-pill${filterTags.includes(tag) ? ' tag-filter-active' : ''}`}
+                      onClick={() => onTagClick(tag)}
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                  {filterTags.length > 0 && (
+                    <button className="filter-clear" onClick={() => { setFilterTags([]); setVisibleCount(PAGE_SIZE) }}>×</button>
+                  )}
+                </div>
               </div>
             )}
             {groups.map((group) => (
