@@ -193,9 +193,15 @@ async def fetch_source(source: dict):
     if items_parsed:
         conn = get_db()
         cutoff = (datetime.now(timezone.utc) - timedelta(days=10, hours=12)).isoformat()
+        existing_titles = set()
+        for row in conn.execute("SELECT title FROM items WHERE source_id = ?", (source_id,)).fetchall():
+            existing_titles.add(re.sub(r"[^a-z0-9]", "", row["title"].lower()))
         for item in items_parsed:
             pub = (item.published_at or datetime.now(timezone.utc)).isoformat()
             if pub < cutoff:
+                continue
+            title_norm = re.sub(r"[^a-z0-9]", "", (item.title or "").lower())
+            if any(title_norm in et or et in title_norm for et in existing_titles if len(et) > 20):
                 continue
             desc = item.description or ""
             desc = re.sub(r"\s*The post\s+.+\s+appeared first on\s+.+\.\s*$", "", desc).strip()
@@ -221,6 +227,7 @@ async def fetch_source(source: dict):
                     "INSERT OR IGNORE INTO items (source_id, guid, title, description, url, tags, published_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     (source_id, item.guid, item.title, desc, item.url, json.dumps(merged_tags), pub),
                 )
+                existing_titles.add(title_norm)
             except Exception:
                 pass
         conn.execute("UPDATE sources SET last_fetched = datetime('now') WHERE id = ?", (source_id,))
