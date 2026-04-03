@@ -1,82 +1,70 @@
 # BoardRSS
-
-A self-hosted RSS reader that looks and feels like a notification feed. Add your favorite sites, and BoardRSS turns them into a clean, scrollable stream of updates — no account needed to read, no third-party services involved.
-
-Built with FastAPI and React. Runs anywhere Docker does.
-
+Self-hosted RSS reader that feels like a notification feed. Add sites and get a clean, scrollable stream - no accounts or third-party services.
+Built with FastAPI + React. Runs anywhere Docker works.
 ---
 
 ## Quick Start
-
-### Docker (recommended)
-
+**Docker (recommended)**
 ```bash
 docker compose up -d
 ```
+Open `http://localhost:8000`, set admin password, add sources.
 
-Open `http://localhost:8000`, set up your admin password, add some sources — that's it.
-
-All data lives in a single Docker volume (`boardrss-data`).
-
-### Local development
-
-**Backend:**
+**Local dev**
 ```bash
 pip install -r requirements.txt
 cd backend && python server.py
-```
-
-**Frontend:**
-```bash
 cd frontend && npm install && npm run dev
 ```
 
-The frontend runs on `http://localhost:3000` and proxies API requests to the backend on `:8000`.
+Or run both:
 
-Or run both at once:
 ```bash
 python start.py
 ```
-
 ---
 
-## What it does
+## Features
 
-- **Feed discovery** — Give it any URL. It'll find the RSS/Atom feed automatically. If there isn't one, it falls back to scraping the page directly (HTML, JSON-LD, sitemaps, etc.)
-- **Bot detection bypass** — Uses browser-level TLS fingerprinting to get past Cloudflare and similar protections
-- **Google News fallback** — When a site blocks scrapers or has too few items, BoardRSS supplements results from Google News RSS
-- **Tag filtering** — Filter your feed by tags with a multi-select tag bar at the top
-- **Customization** — Change the dashboard name, logo, colors, and font from the admin panel
-- **Import/export** — Back up your sources as JSON and restore them anywhere
-- **Auto-cleanup** — Set a max database size and old items get pruned automatically
-- **Configurable polling** — Set how often sources are checked (default: every 2 minutes)
-
+* Auto **RSS/Atom discovery** (with scraping fallback)
+* **Bot bypass** (Cloudflare, etc.)
+* **Google News fallback**
+* **Tag filtering**
+* **Custom UI** (logo, colors, font)
+* **Import/export**
+* **Auto-cleanup**
+* **Adjustable polling**
 ---
 
-## Admin panel
-
-Go to `/admin` after setup. From there you can:
-
-- Add, edit, enable/disable, or delete RSS sources
-- Trigger a manual fetch for any source
-- Adjust the polling interval and database size limit
-- Upload a custom logo and font
-- Set theme colors
-- Export/import your source list
-- Make the dashboard public or require login to view
-
+## Admin
+`/admin` panel lets you manage sources, trigger fetches, customize UI, and control access.
 ---
 
-## Tech stack
-
-| Layer | Tech |
-|-------|------|
-| Backend | Python, FastAPI, SQLite (WAL mode), feedparser, BeautifulSoup, curl_cffi |
-| Frontend | React, TypeScript, Vite, Framer Motion |
-| Deployment | Docker (multi-stage build) |
-
+## Stack
+* Backend: FastAPI, SQLite
+* Frontend: React, TypeScript
+* Deploy: Docker
 ---
 
 ## License
+MIT License
 
-MIT
+Copyright (c) [2026] [non-erx]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
